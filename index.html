@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Science Game</title>
+    <style>
+    #board {
+        width: 1000px;
+        height: 320px;
+        position: relative;
+        background: #F2F2F2;
+        border: 1px solid #000;
+    }
+    #board img {
+        position: absolute;
+    }
+    #board img.item {
+        margin-top: -40px;
+    }
+    img {
+        position: relative;
+        width: 101px;
+        height: 171px;
+    }
+    #tiles, #items {
+        position: relative;
+        width: 50%;
+        float: left;
+    }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#tileList").text().trim().split(/\n\s*/).forEach(function(image) {
+            $("<img/>", { src: "images/" + image, "class": "tile" })
+                .appendTo("#tiles");
+        });
+
+        $("#itemList").text().trim().split(/\n\s*/).forEach(function(image) {
+            $("<img/>", { src: "images/" + image, "class": "item" })
+                .appendTo("#items");
+        });
+
+        $("#board").droppable({
+            drop: function(e, ui) {
+                var elem = ui.draggable.clone();
+                elem.css({
+                    top: ui.helper.css("top"),
+                    left: ui.helper.css("left")
+                });
+                $("#board").append(elem);
+            }
+        });
+
+        $("#tiles img, #items img").draggable({
+            appendTo: "#board",
+            containment: "#board",
+            grid: [ 100, 80 ],
+            refreshPositions: true,
+            drag: function(e, ui) {
+                // Make sure we stay on the grid!
+                ui.position.left = Math.round(ui.position.left / 100) * 100;
+                ui.position.top = Math.round(ui.position.top / 80) * 80;
+            },
+            helper: "clone",
+            opacity: 0.7,
+            stack: "#board img",
+            zIndex: 500
+        });
+    });
+    </script>
+    <script id="tileList" type="text/images">
+    Brown Block.png
+    Dirt Block.png
+    Grass Block.png
+    Plain Block.png
+    Ramp East.png
+    Ramp North.png
+    Ramp South.png
+    Ramp West.png
+    Roof East.png
+    Roof North East.png
+    Roof North West.png
+    Roof North.png
+    Roof South East.png
+    Roof South West.png
+    Roof South.png
+    Roof West.png
+    Stone Block Tall.png
+    Stone Block.png
+    Wall Block Tall.png
+    Wall Block.png
+    Water Block.png
+    Wood Block.png
+    </script>
+    <script id="itemList" type="text/images">
+    miniGalileo.png
+    Character Boy.png
+    Character Cat Girl.png
+    Character Horn Girl.png
+    Character Pink Girl.png
+    Character Princess Girl.png
+    Chest Closed.png
+    Chest Open.png
+    Chest Lid.png
+    Door Tall Closed.png
+    Door Tall Open.png
+    Window Tall.png
+    Enemy Bug.png
+    Gem Blue.png
+    Gem Green.png
+    Gem Orange.png
+    Heart.png
+    Key.png
+    Rock.png
+    Selector.png
+    Star.png
+    Tree Short.png
+    Tree Tall.png
+    Tree Ugly.png
+    </script>
+</head>
+<body>
+    <div id="board"></div>
+    <div id="tiles"></div>
+    <div id="items"></div>
+</body>
+</html>
