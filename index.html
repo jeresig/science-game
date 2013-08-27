@@ -4,17 +4,17 @@
     <title>Science Game</title>
     <style>
     #board {
-        width: 1000px;
-        height: 320px;
         position: relative;
         background: #F2F2F2;
         border: 1px solid #000;
+        margin: 20px;
+        top: 40px;
     }
     #board img {
         position: absolute;
     }
     #board img.item {
-        margin-top: -40px;
+        margin-top: -71px;
     }
     img {
         position: relative;
@@ -23,48 +23,83 @@
     }
     #tiles, #items {
         position: relative;
-        width: 50%;
-        float: left;
+        margin: 20px;
+    }
+    #items img {
+        /*position: absolute;*/
+    }
+    .block {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 1px solid #000;
     }
     </style>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script>
+    var tileWidth = 100;
+    var tileHeight = 100;
+    var boardWidth = 10;
+    var boardHeight = 3;
+
     $(document).ready(function() {
-        $("#tileList").text().trim().split(/\n\s*/).forEach(function(image) {
-            $("<img/>", { src: "images/" + image, "class": "tile" })
-                .appendTo("#tiles");
+        //$("#tileList").text().trim().split(/\n\s*/).forEach(function(image) {
+            //$("<img/>", { src: "images/" + image, "class": "tile" })
+                //.appendTo("#tiles");
+        //});
+
+        $("#board").css({
+            width: tileWidth * boardWidth,
+            height: tileHeight * boardHeight
         });
 
-        $("#itemList").text().trim().split(/\n\s*/).forEach(function(image) {
-            $("<img/>", { src: "images/" + image, "class": "item" })
-                .appendTo("#items");
+        $("#board-contents").css({
+            width: tileWidth * boardWidth,
+            height: tileHeight * (boardHeight + 1)
         });
 
-        $("#board").droppable({
+        $("#tiles, #items").css({
+            width: tileWidth * boardWidth
+        });
+
+        for (var x = 0; x < 10; x++) {
+            for (var y = 0; y < 3; y++) {
+                $("<div>", { "class": "block", css: { top: y * tileHeight, left: x * tileWidth } }).appendTo("#board-contents");
+            }
+        }
+
+        $("#itemList").text().trim().split(/\n\s*/).forEach(function(image, i) {
+            $("<img/>", {
+                src: "images/" + image,
+                "class": "item"
+            })
+            .appendTo("#items");
+        });
+
+        $("#board-contents").droppable({
             drop: function(e, ui) {
                 var elem = ui.draggable.clone();
                 elem.css({
                     top: ui.helper.css("top"),
                     left: ui.helper.css("left")
                 });
-                $("#board").append(elem);
+                $("#board-contents").append(elem);
             }
         });
 
         $("#tiles img, #items img").draggable({
-            appendTo: "#board",
-            containment: "#board",
-            grid: [ 100, 80 ],
+            appendTo: "#board-contents",
+            containment: "#board-contents",
             refreshPositions: true,
             drag: function(e, ui) {
                 // Make sure we stay on the grid!
-                ui.position.left = Math.round(ui.position.left / 100) * 100;
-                ui.position.top = Math.round(ui.position.top / 80) * 80;
+                ui.position.left = Math.round(ui.position.left / tileWidth) * tileWidth;
+                ui.position.top = Math.round(ui.position.top / tileHeight) * tileHeight;
             },
             helper: "clone",
             opacity: 0.7,
-            stack: "#board img",
+            stack: "#board-contents img",
             zIndex: 500
         });
     });
@@ -121,7 +156,9 @@
     </script>
 </head>
 <body>
-    <div id="board"></div>
+    <div id="board">
+        <div id="board-contents"></div>
+    </div>
     <div id="tiles"></div>
     <div id="items"></div>
 </body>
