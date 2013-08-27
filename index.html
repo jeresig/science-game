@@ -34,6 +34,9 @@
         height: 100px;
         border: 1px solid #000;
     }
+    #board.no-grid .block {
+        display: none;
+    }
     </style>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -102,6 +105,10 @@
             stack: "#board-contents img",
             zIndex: 500
         });
+
+        $("#toggle-grid").click(function() {
+            $("#board").toggleClass("no-grid");
+        });
     });
     </script>
     <script id="tileList" type="text/images">
@@ -157,6 +164,7 @@
     </script>
 </head>
 <body>
+    <p><button id="toggle-grid">Toggle Grid</button></p>
     <div id="board">
         <div id="board-contents"></div>
     </div>
