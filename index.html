@@ -9,7 +9,6 @@
         border: 1px solid #000;
         margin: 20px;
         top: 40px;
-        background: url(labs/middle.jpg);
         width: 1100px;
         height: 650px;
     }
@@ -55,16 +54,6 @@
     var boardHeight = 5;
 
     $(document).ready(function() {
-        //$("#tileList").text().trim().split(/\n\s*/).forEach(function(image) {
-            //$("<img/>", { src: "images/" + image, "class": "tile" })
-                //.appendTo("#tiles");
-        //});
-
-        //$("#board").css({
-            //width: tileWidth * boardWidth,
-            //height: tileHeight * boardHeight
-        //});
-
         $("#board-contents").css({
             width: tileWidth * boardWidth,
             height: tileHeight * (boardHeight + 1)
@@ -79,6 +68,20 @@
                 $("<div>", { "class": "block", css: { top: y * tileHeight, left: x * tileWidth } }).appendTo("#board-contents");
             }
         }
+
+        $("#lab-select").change(function() {
+            $("#board").css({ background: "url(labs/" + this.value + ")" });
+        });
+
+        $("#labList").text().trim().split(/\n\s*/).forEach(function(image, i) {
+            $("<option>", {
+                value: image,
+                text: image
+            })
+            .appendTo("#lab-select");
+        });
+
+        $("#lab-select").change();
 
         $("#itemList").text().trim().split(/\n\s*/).forEach(function(image, i) {
             $("<img/>", {
@@ -118,6 +121,9 @@
             $("#board").toggleClass("no-grid");
         });
     });
+    </script>
+    <script id="labList" type="text/images">
+    middle.jpg
     </script>
     <script id="tileList" type="text/images">
     Brown Block.png
@@ -172,7 +178,7 @@
     </script>
 </head>
 <body>
-    <p><button id="toggle-grid">Toggle Grid</button></p>
+    <p><button id="toggle-grid">Toggle Grid</button> <label>Lab: <select id="lab-select"></select></label></p>
     <div id="board">
         <div id="board-contents"></div>
     </div>
