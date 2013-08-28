@@ -9,12 +9,20 @@
         border: 1px solid #000;
         margin: 20px;
         top: 40px;
+        background: url(labs/middle.jpg);
+        width: 1100px;
+        height: 650px;
     }
     #board img {
         position: absolute;
     }
     #board img.item {
         margin-top: -71px;
+    }
+    #board-contents {
+        position: absolute;
+        top: 120px;
+        left: 48px;
     }
     img {
         position: relative;
@@ -32,7 +40,7 @@
         position: absolute;
         width: 100px;
         height: 100px;
-        border: 1px solid #000;
+        border: 1px solid rgba(0, 0, 0, 0.4);
     }
     #board.no-grid .block {
         display: none;
@@ -44,7 +52,7 @@
     var tileWidth = 100;
     var tileHeight = 100;
     var boardWidth = 10;
-    var boardHeight = 3;
+    var boardHeight = 5;
 
     $(document).ready(function() {
         //$("#tileList").text().trim().split(/\n\s*/).forEach(function(image) {
@@ -52,10 +60,10 @@
                 //.appendTo("#tiles");
         //});
 
-        $("#board").css({
-            width: tileWidth * boardWidth,
-            height: tileHeight * boardHeight
-        });
+        //$("#board").css({
+            //width: tileWidth * boardWidth,
+            //height: tileHeight * boardHeight
+        //});
 
         $("#board-contents").css({
             width: tileWidth * boardWidth,
@@ -66,8 +74,8 @@
             width: tileWidth * boardWidth
         });
 
-        for (var x = 0; x < 10; x++) {
-            for (var y = 0; y < 3; y++) {
+        for (var x = 0; x < boardWidth; x++) {
+            for (var y = 0; y < boardHeight; y++) {
                 $("<div>", { "class": "block", css: { top: y * tileHeight, left: x * tileWidth } }).appendTo("#board-contents");
             }
         }
