@@ -16,6 +16,7 @@
     "url": "https://github.com/jeresig/science-game/issues"
   },
   "dependencies": {
-    "brain": "~0.6.2"
+    "brain": "~0.6.2",
+    "lodash": "~2.4.1"
   }
 }
