@@ -34,7 +34,6 @@ var addCardsToHand = function(hand, num) {
         // TODO: Adjust random-ness to pull from a real deck of cards
         // TODO: Take into account card passing and accessibility?
         var color = colors[Math.floor(Math.random() * colors.length)];
-        //console.log("adding card", color)
         hand[color] += 1;
     }
 };
@@ -102,11 +101,10 @@ var trainData = [];
 var startingCards = 6;
 for (var startingCards = 1; startingCards < totalCards; startingCards++) {
     buildHands(initHand(), 0, startingCards, function(hand) {
-        console.log("hand", hand);
-
         var colorHands = {};
         var inputHands = {};
         var wins = {};
+        var avgScores = {};
 
         colors.forEach(function(color) {
             var handData = colorHands[color] = _.clone(hand);
@@ -114,16 +112,11 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
 
             inputHands[color] = buildHandArray(handData, totalCards);
             wins[color] = 0;
+            avgScores[color] = 0;
         });
 
-        // TODO: Need to re-think this logic. Need to measure the effectiveness
-        // of having played this card vs. other cards and the likelihood of
-        // eventually winning, as a result.
         for (var i = 0; i < numPlaythroughs; i++) {
-            var playthrough = _.clone(colorHands);
-            if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
-                //console.log("num cards", totalCards - startingCards);
-            }
+            var playthrough = _.cloneDeep(colorHands);
             addCardsToHands(playthrough, totalCards - startingCards - 1);
 
             var maxScore = 0;
@@ -131,6 +124,7 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
 
             colors.forEach(function(color) {
                 scores[color] = scoreHand(playthrough[color]);
+                avgScores[color] += scores[color];
                 maxScore = Math.max(maxScore, scores[color]);
             });
 
@@ -142,28 +136,15 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
         }
         
         colors.forEach(function(color) {
-            if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
-                //console.log("inputHand", inputHands[color], wins[color] / numPlaythroughs)
-                //process.exit(0)
-            }
-            
             trainData.push({
                 input: inputHands[color],
                 output: [wins[color] / numPlaythroughs]
             });
         });
-        
-        if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
-            //console.log("inputHand", inputHands[color], wins[color] / numPlaythroughs)
-            //process.exit(0)
-        }
     });
 }
 
-//console.log(trainData)
 console.log("Amount of training data:", trainData.length)
-
-//process.exit(0);
 
 console.log(net.train(trainData, {
     iterations: 500,
