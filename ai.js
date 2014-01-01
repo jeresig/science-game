@@ -31,20 +31,18 @@ var scoreHand = function(hand) {
 
 var addCardsToHand = function(hand, num) {
     for (var i = 0; i < num; i++) {
+        // TODO: Adjust random-ness to pull from a real deck of cards
+        // TODO: Take into account card passing and accessibility?
         var color = colors[Math.floor(Math.random() * colors.length)];
+        //console.log("adding card", color)
         hand[color] += 1;
     }
 };
 
 var addCardsToHands = function(hands, num) {
-    for (var i = 0; i < num; i++) {
-        // TODO: Adjust random-ness to pull from a real deck of cards
-        // TODO: Take into account card passing and accessibility?
-        var color = colors[Math.floor(Math.random() * colors.length)];
-        colors.forEach(function(handColor) {
-            hands[handColor][color] += 1;
-        });
-    }
+    colors.forEach(function(handColor) {
+        addCardsToHand(hands[handColor], num);
+    });
 };
 
 var buildHandArray = function(handData, totalCards) {
@@ -97,7 +95,7 @@ var buildHands = function(hand, colorPos, handSize, callback) {
 var iterations = 5000;
 var totalCards = 7;
 var numStartingHands = 10;
-var numPlaythroughs = 50;
+var numPlaythroughs = 1000;
 
 var trainData = [];
 
@@ -108,12 +106,14 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
 
         var colorHands = {};
         var inputHands = {};
+        var wins = {};
 
         colors.forEach(function(color) {
             var handData = colorHands[color] = _.clone(hand);
             playCard(colorHands[color], color);
 
             inputHands[color] = buildHandArray(handData, totalCards);
+            wins[color] = 0;
         });
 
         // TODO: Need to re-think this logic. Need to measure the effectiveness
@@ -121,7 +121,10 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
         // eventually winning, as a result.
         for (var i = 0; i < numPlaythroughs; i++) {
             var playthrough = _.clone(colorHands);
-            addCardsToHands(playthrough, totalCards - startingCards);
+            if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
+                //console.log("num cards", totalCards - startingCards);
+            }
+            addCardsToHands(playthrough, totalCards - startingCards - 1);
 
             var maxScore = 0;
             var scores = {};
@@ -132,15 +135,27 @@ for (var startingCards = 1; startingCards < totalCards; startingCards++) {
             });
 
             colors.forEach(function(color) {
-                if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
-                    console.log("inputHand", inputHands[color], scores[color] >= maxScore)
+                if (scores[color] >= maxScore) {
+                    wins[color] += 1;
                 }
-                
-                trainData.push({
-                    input: inputHands[color],
-                    output: [scores[color] >= maxScore ? 1 : 0]
-                });
             });
+        }
+        
+        colors.forEach(function(color) {
+            if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
+                //console.log("inputHand", inputHands[color], wins[color] / numPlaythroughs)
+                //process.exit(0)
+            }
+            
+            trainData.push({
+                input: inputHands[color],
+                output: [wins[color] / numPlaythroughs]
+            });
+        });
+        
+        if (hand.red === 0 && hand.green === 6 && hand.purple === 0) {
+            //console.log("inputHand", inputHands[color], wins[color] / numPlaythroughs)
+            //process.exit(0)
         }
     });
 }
