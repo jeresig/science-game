@@ -44,6 +44,12 @@
     #board.no-grid .block {
         display: none;
     }
+	.torch1 {
+		width: 51px;
+		height: 72px;
+		top: 18px;
+		left: 187px;
+	}
     </style>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -155,7 +161,8 @@
 	MiniEdison.png
 	miniBase.png
     miniGalileo.png
-	NewTorchTest.gif
+	RosalindMini.png
+	TeslaMini.png
     Character Boy.png
     Character Cat Girl.png
     Character Horn Girl.png
@@ -173,10 +180,8 @@
     Heart.png
     Key.png
     Rock.png
-	RosalindMini.png
     Selector.png
     Star.png
-	TeslaMini.png
     Tree Short.png
     Tree Tall.png
     Tree Ugly.png
@@ -185,6 +190,7 @@
 <body>
     <p><button id="toggle-grid">Toggle Grid</button> <label>Lab: <select id="lab-select"></select></label></p>
     <div id="board">
+    	<img src="images/NewTorchTest.gif" class="torch1"/>
         <div id="board-contents"></div>
     </div>
     <div id="tiles"></div>
